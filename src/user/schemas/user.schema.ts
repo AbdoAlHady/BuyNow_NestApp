@@ -27,8 +27,6 @@ export class User {
   @Prop({
     type: String,
     required: true,
-    minlength: 3,
-    maxlength: 20,
   })
   password: string;
 
@@ -61,10 +59,8 @@ export class User {
   @Prop({ type: Date })
   verificationCodeExpires: Date;
 
-  @Prop({ type: String, enum:['male','female'] })
+  @Prop({ type: String, enum: ['male', 'female'] })
   gender: string;
-
-
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
