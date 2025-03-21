@@ -1,3 +1,10 @@
 {
+    "nameIsString": "Name must be a string",
+    "nameIsRequired": "Name is required",
+    "nameMaxLength": "Name must be at least 30 characters long",
+    "nameMinLength": "Name must be at most 3 characters long",
+    "emailIsNotEmpty": "Email must not be empty",
+    "emailIsString": "Email must be a string",
+    "emailIsNotValid": "Email must be a valid email address"
     
 }
