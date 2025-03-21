@@ -52,7 +52,7 @@ export class User {
   @Prop({ type: String })
   address: string;
 
-  @Prop({ type: Boolean, default: fail })
+  @Prop({ type: Boolean, default: false })
   active: boolean;
 
   @Prop({ type: String })
