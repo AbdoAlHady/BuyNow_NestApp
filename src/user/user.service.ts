@@ -1,9 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
-import { validateMongoId } from 'src/utils/helper-functions';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -17,26 +21,54 @@ export class UserService {
    * @returns  The created user from the database
    * @access Admin
    */
-  create(createUserDto: CreateUserDto) {
-    return this.userModel.create(createUserDto);
+  async create(createUserDto: CreateUserDto) {
+    const user = await this.userModel.findOne({ email: createUserDto.email });
+    if (user) {
+      throw new BadRequestException('User already exists');
+    }
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    createUserDto.password = hashedPassword;
+
+    const newUser = await this.userModel.create({
+      ...createUserDto,
+      role: createUserDto.role ?? 'user',
+    });
+    return {
+      status: 'success',
+      message: 'User created successfully',
+      data: newUser,
+    };
   }
 
+  /**
+   * Get all users
+   * @returns All users from the database
+   * @access Admin
+   */
   public async findAll() {
-    return await this.userModel.find();
+    const users = await this.userModel.find().select('-password');
+    return {
+      status: 'success',
+      results: users.length,
+      data: users,
+    };
   }
+
   /**
    * Find a user by ID
    * @param userId - The ID of the user to find
-   * @access Admin 
+   * @access Admin
    * @returns The found user from the database
    */
   public async findOne(userId: string) {
-    validateMongoId(userId);
     const user = await this.userModel.findById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    return user;
+    return {
+      status: 'success',
+      data: user,
+    };
   }
 
   update(id: number) {
