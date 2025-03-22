@@ -73,7 +73,7 @@ export class UserService {
   }
 
   /**
-   * 
+   *
    * @param id - The ID of the user to update
    * @param updateUserDto  - The user data to update
    * @returns  The updated user from the database
@@ -81,19 +81,23 @@ export class UserService {
    */
   public async update(id: string, updateUserDto: UpdateUserDto) {
     await this.findOne(id);
-    const updatedUser = await this.userModel.findByIdAndUpdate(
-      id,
-      updateUserDto,
-      { new: true },
-    ).select('-password');
+    const updatedUser = await this.userModel
+      .findByIdAndUpdate(id, updateUserDto, { new: true })
+      .select('-password');
     return {
       status: 'success',
       message: 'User updated successfully',
       data: updatedUser,
     };
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  /**
+   * Delete a user by ID
+   * @param id - The ID of the user to delete
+   * @returns  void
+   * @access Admin
+   */
+  public async remove(id: string): Promise<void> {
+    await this.findOne(id);
+    await this.userModel.findByIdAndDelete(id);
   }
 }

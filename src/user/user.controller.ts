@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Param, Delete, Patch } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Patch,
+  HttpStatus,
+  HttpCode,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { MongoIdValidationPipe } from 'src/utils/pipes/mongo-id-validation.pipe';
@@ -21,22 +31,25 @@ export class UserController {
 
   @Get()
   findAll() {
-    
     return this.userService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id',MongoIdValidationPipe) id: string) {
+  findOne(@Param('id', MongoIdValidationPipe) id: string) {
     return this.userService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id',MongoIdValidationPipe) id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(
+    @Param('id', MongoIdValidationPipe) id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     return this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  @HttpCode(HttpStatus.NO_CONTENT)
+   async remove(@Param('id', MongoIdValidationPipe) id: string) {
+    await this.userService.remove(id);
   }
 }
