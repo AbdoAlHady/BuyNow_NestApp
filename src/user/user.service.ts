@@ -9,6 +9,13 @@ export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
+
+  /**
+   * Create a new user
+   * @param createUserDto - The user data to create 
+   * @returns  The created user from the database
+   * @access Admin
+   */
   create(createUserDto: CreateUserDto) {
     return this.userModel.create(createUserDto);
   }

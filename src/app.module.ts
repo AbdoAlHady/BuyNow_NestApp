@@ -36,6 +36,7 @@ import { JwtModule } from '@nestjs/jwt';
     }),
 
     JwtModule.registerAsync({
+      global: true,
       useFactory: (config: ConfigService) => {
 
         return {
