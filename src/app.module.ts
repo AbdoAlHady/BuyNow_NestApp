@@ -9,6 +9,7 @@ import {
   QueryResolver,
 } from 'nestjs-i18n';
 import * as path from 'path';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -31,6 +32,20 @@ import * as path from 'path';
           uri: config.get('DATABASE_URL'),
         };
       },
+      inject: [ConfigService],
+    }),
+
+    JwtModule.registerAsync({
+      useFactory: (config: ConfigService) => {
+
+        return {
+          secret: config.get('JWT_SECRET'),
+          signOptions: {
+            expiresIn: config.get('JWT_EXPIRES_IN'),
+          },
+        };
+      },
+      
       inject: [ConfigService],
     }),
     UserModule,
