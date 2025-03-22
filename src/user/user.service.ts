@@ -27,8 +27,7 @@ export class UserService {
     if (user) {
       throw new BadRequestException('User already exists');
     }
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-    createUserDto.password = hashedPassword;
+    createUserDto.password = await this.hashPassword(createUserDto.password);
 
     const newUser = await this.userModel.create({
       ...createUserDto,
@@ -81,6 +80,9 @@ export class UserService {
    */
   public async update(id: string, updateUserDto: UpdateUserDto) {
     await this.findOne(id);
+    if (updateUserDto.password) {
+      updateUserDto.password = await this.hashPassword(updateUserDto.password);
+    }
     const updatedUser = await this.userModel
       .findByIdAndUpdate(id, updateUserDto, { new: true })
       .select('-password');
@@ -99,5 +101,14 @@ export class UserService {
   public async remove(id: string): Promise<void> {
     await this.findOne(id);
     await this.userModel.findByIdAndDelete(id);
+  }
+
+  /**
+   * Hash the password
+   * @param createUserDto - The user data to hash
+   * @returns The hashed password
+   */
+  private async hashPassword(password: string): Promise<string> {
+    return await bcrypt.hash(password, 10);
   }
 }
