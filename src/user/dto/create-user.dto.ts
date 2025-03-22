@@ -30,6 +30,7 @@ export class CreateUserDto {
   @MaxLength(20, { message: 'Password must be at most 20 characters long' })
   password: string;
 
+  @IsOptional()
   @IsEnum(['admin', 'user'], { message: 'Role must be either admin or user' })
   role: string;
 

@@ -6,7 +6,7 @@ import { AuthRolesGuard } from './guard/auth-roles.guard';
 import { Roles } from './decorators/roles.decorator';
 // import { UpdateUserDto } from './dto/update-user.dto';
 
-@Controller('v1/api/users')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -19,12 +19,13 @@ export class UserController {
 
   @Get()
   findAll() {
+    
     return this.userService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+    return this.userService.findOne(id);
   }
 
   // @Patch(':id')
