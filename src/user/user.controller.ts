@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { MongoIdValidationPipe } from 'src/utils/pipes/mongo-id-validation.pipe';
+import { UpdateUserDto } from './dto/update-user.dto';
 // import { AuthGuard } from './guard/auth.guard';
 // import { AuthRolesGuard } from './guard/auth-roles.guard';
 // import { Roles } from './decorators/roles.decorator';
@@ -29,10 +30,10 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  //   return this.userService.update(+id, updateUserDto);
-  // }
+  @Patch(':id')
+  update(@Param('id',MongoIdValidationPipe) id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(id, updateUserDto);
+  }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
