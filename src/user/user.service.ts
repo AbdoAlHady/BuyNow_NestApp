@@ -61,7 +61,7 @@ export class UserService {
    * @returns The found user from the database
    */
   public async findOne(userId: string) {
-    const user = await this.userModel.findById(userId);
+    const user = await this.userModel.findById(userId,{ password: 0 });
     if (!user) {
       throw new NotFoundException('User not found');
     }
