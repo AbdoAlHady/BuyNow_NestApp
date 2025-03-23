@@ -9,11 +9,15 @@ import {
   HttpStatus,
   HttpCode,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { MongoIdValidationPipe } from 'src/utils/pipes/mongo-id-validation.pipe';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { AuthGuard } from './guard/auth.guard';
+import { AuthRolesGuard } from './guard/auth-roles.guard';
+import { Roles } from './decorators/roles.decorator';
 // import { AuthGuard } from './guard/auth.guard';
 // import { AuthRolesGuard } from './guard/auth-roles.guard';
 // import { Roles } from './decorators/roles.decorator';
@@ -24,23 +28,29 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  // @UseGuards(AuthGuard,AuthRolesGuard)
-  // @Roles(['admin'])
+  @UseGuards(AuthGuard,AuthRolesGuard)
+  @Roles(['admin'])
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
   @Get()
+  @UseGuards(AuthGuard,AuthRolesGuard)
+  @Roles(['admin'])
   findAll(@Query() query: any) {
     return this.userService.getAllUsers(query);
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard,AuthRolesGuard)
+  @Roles(['admin','user'])
   findOne(@Param('id', MongoIdValidationPipe) id: string) {
     return this.userService.findOne(id);
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard,AuthRolesGuard)
+  @Roles(['admin'])
   update(
     @Param('id', MongoIdValidationPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -49,6 +59,8 @@ export class UserController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard,AuthRolesGuard)
+  @Roles(['admin'])
   @HttpCode(HttpStatus.NO_CONTENT)
    async remove(@Param('id', MongoIdValidationPipe) id: string) {
     await this.userService.remove(id);
