@@ -12,6 +12,7 @@ import * as path from 'path';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ParseQueryInterceptor } from './utils/interceptors/parse-query.interceptor';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { ParseQueryInterceptor } from './utils/interceptors/parse-query.intercep
       inject: [ConfigService],
     }),
     UserModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [

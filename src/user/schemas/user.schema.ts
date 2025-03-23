@@ -29,7 +29,6 @@ export class User {
 
   @Prop({
     type: String,
-    required: true,
     enum: ['user', 'admin', 'manager'],
     default: 'user',
   })
