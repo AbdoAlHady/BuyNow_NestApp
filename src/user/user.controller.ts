@@ -8,6 +8,7 @@ import {
   Patch,
   HttpStatus,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -30,7 +31,8 @@ export class UserController {
   }
 
   @Get()
-  findAll() {
+  findAll(@Query() query: any) {
+    console.log(query);
     return this.userService.findAll();
   }
 

@@ -10,6 +10,8 @@ import {
 } from 'nestjs-i18n';
 import * as path from 'path';
 import { JwtModule } from '@nestjs/jwt';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ParseQueryInterceptor } from './utils/interceptors/parse-query.interceptor';
 
 @Module({
   imports: [
@@ -52,6 +54,11 @@ import { JwtModule } from '@nestjs/jwt';
     UserModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ParseQueryInterceptor, // ✅ تطبيقه تلقائيًا على كل الطلبات
+    },
+  ],
 })
 export class AppModule {}
