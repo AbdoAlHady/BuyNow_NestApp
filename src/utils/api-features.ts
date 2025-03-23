@@ -1,12 +1,18 @@
 import { Query } from "mongoose";
-import { paginationResult } from "./types";
+import { IPaginationResult } from "./types";
 
 class ApiFeatures<T> {
-  public paginationResult:paginationResult;
+  public paginationResult:IPaginationResult;
   constructor(
     public query: Query<T[], T>,
     public queryString: Record<string, any>
-  ) {}
+  ) {
+    this.paginationResult = {
+      currentPage: 1,
+      limit: 5,
+      numbersOfPages: 0,
+    };
+  }
 
   filter(): this {
     const queryObj = { ...this.queryString };
@@ -38,8 +44,8 @@ class ApiFeatures<T> {
   }
 
   paginate(countDocuments:number): this {
-    const page:number = this.queryString.page || 1;
-    const limit:number = this.queryString.limit  || 5;
+    const page:number = +this.queryString.page || 1;
+    const limit:number = +this.queryString.limit  || 5;
     const skip:number = (page - 1) * limit;
     const endIndex:number = page * limit; // end index of the current page
     this.paginationResult.currentPage = page;

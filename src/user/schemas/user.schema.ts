@@ -41,8 +41,8 @@ export class User {
   @Prop({ type: Number })
   age: number;
 
-  @Prop({ type: Number, minlength: 11, maxlength: 11 })
-  phoneNumber: number;
+  @Prop({ type: String, minlength: 11, maxlength: 11 })
+  phoneNumber: string;
 
   @Prop({ type: String })
   address: string;

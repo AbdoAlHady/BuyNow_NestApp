@@ -3,7 +3,7 @@ export type JwtPayloadType = {
     role: string;
 };
 
-export type paginationResult={
+export interface IPaginationResult{
     currentPage: number;
     limit: number;
     numbersOfPages: number;

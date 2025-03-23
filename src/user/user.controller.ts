@@ -32,8 +32,7 @@ export class UserController {
 
   @Get()
   findAll(@Query() query: any) {
-    console.log(query);
-    return this.userService.findAll();
+    return this.userService.getAllUsers(query);
   }
 
   @Get(':id')

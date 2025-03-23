@@ -1,20 +1,17 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { BaseService } from 'src/utils/services/base.service';
 
 @Injectable()
-export class UserService {
-  constructor(
-    @InjectModel(User.name) private readonly userModel: Model<User>,
-  ) {}
+export class UserService extends BaseService<User> {
+  constructor(@InjectModel(User.name) private readonly userModel: Model<User>) {
+    super(userModel);
+  }
 
   /**
    * Create a new user
@@ -45,13 +42,8 @@ export class UserService {
    * @returns All users from the database
    * @access Admin
    */
-  public async findAll() {
-    const users = await this.userModel.find().select('-password');
-    return {
-      status: 'success',
-      results: users.length,
-      data: users,
-    };
+  public async getAllUsers(query: any) {
+    return await this.findAll(query);
   }
 
   /**
@@ -60,15 +52,8 @@ export class UserService {
    * @access Admin
    * @returns The found user from the database
    */
-  public async findOne(userId: string) {
-    const user = await this.userModel.findById(userId, { password: 0 });
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-    return {
-      status: 'success',
-      data: user,
-    };
+  public async getSpecialUser(userId: string) {
+    return await this.findOne(userId);
   }
 
   /**
@@ -79,18 +64,7 @@ export class UserService {
    * @access Admin
    */
   public async update(id: string, updateUserDto: UpdateUserDto) {
-    await this.findOne(id);
-    if (updateUserDto.password) {
-      updateUserDto.password = await this.hashPassword(updateUserDto.password);
-    }
-    const updatedUser = await this.userModel
-      .findByIdAndUpdate(id, updateUserDto, { new: true })
-      .select('-password');
-    return {
-      status: 'success',
-      message: 'User updated successfully',
-      data: updatedUser,
-    };
+    return await this.updateOne(id, updateUserDto);
   }
   /**
    * Delete a user by ID
@@ -99,8 +73,7 @@ export class UserService {
    * @access Admin
    */
   public async remove(id: string): Promise<void> {
-    await this.findOne(id);
-    await this.userModel.findByIdAndDelete(id);
+    await this.deleteOne(id);
   }
 
   /**
