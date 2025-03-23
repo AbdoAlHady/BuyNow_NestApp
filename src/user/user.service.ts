@@ -43,13 +43,13 @@ export class UserService extends BaseService<User> {
    * @access Admin
    */
   public async getAllUsers(query: any) {
-    return await this.findAll(query);
+    return await this.findAll(query, '', '-password');
   }
 
   /**
    * Find a user by ID
    * @param userId - The ID of the user to find
-   * @access Admin
+   * @access Public
    * @returns The found user from the database
    */
   public async getSpecialUser(userId: string) {
