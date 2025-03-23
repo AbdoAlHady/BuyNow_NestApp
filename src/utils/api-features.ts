@@ -1,6 +1,8 @@
 import { Query } from "mongoose";
+import { paginationResult } from "./types";
 
 class ApiFeatures<T> {
+  public paginationResult:paginationResult;
   constructor(
     public query: Query<T[], T>,
     public queryString: Record<string, any>
@@ -35,10 +37,21 @@ class ApiFeatures<T> {
     return this;
   }
 
-  paginate(): this {
-    const page = this.queryString.page * 1 || 1;
-    const limit = this.queryString.limit * 1 || 5;
-    const skip = (page - 1) * limit;
+  paginate(countDocuments:number): this {
+    const page:number = this.queryString.page || 1;
+    const limit:number = this.queryString.limit  || 5;
+    const skip:number = (page - 1) * limit;
+    const endIndex:number = page * limit; // end index of the current page
+    this.paginationResult.currentPage = page;
+    this.paginationResult.limit = limit;
+    this.paginationResult.numbersOfPages = Math.ceil(countDocuments / limit);
+    if (endIndex < countDocuments) {
+      this.paginationResult.nextPage= page + 1;
+    }
+    if (skip > 0) {
+      this.paginationResult.previousPage = page - 1;
+    }
+
     this.query = this.query.skip(skip).limit(limit);
     return this;
   }
