@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import {Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './user/user.module';
@@ -61,6 +61,7 @@ import { AuthModule } from './auth/auth.module';
       provide: APP_INTERCEPTOR,
       useClass: ParseQueryInterceptor, // ✅ تطبيقه تلقائيًا على كل الطلبات
     },
+   
   ],
 })
 export class AppModule {}

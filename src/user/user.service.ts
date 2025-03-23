@@ -49,7 +49,7 @@ export class UserService extends BaseService<User> {
   /**
    * Find a user by ID
    * @param userId - The ID of the user to find
-   * @access Public
+   * @access Admin
    * @returns The found user from the database
    */
   public async getSpecialUser(userId: string) {
