@@ -53,7 +53,8 @@ export class UserService extends BaseService<User> {
    * @access Admin
    * @returns The found user from the database
    */
-  public async getSpecialUser(userId: string) {
+  public async getSpecialUser(userId: string, payload: JwtPayloadType) {
+    await this.validateUserPermission(userId, payload);
     return await this.findOne(userId);
   }
 
@@ -81,15 +82,6 @@ export class UserService extends BaseService<User> {
    */
   public async remove(id: string): Promise<void> {
     await this.deleteOne(id);
-  }
-
-  /**
-   * Get user info
-   * @param id - The ID of the user to get info for
-   * @returns The user info from the database
-   */
-  public async getUserInfo(id: string) {
-    return await this.findOne(id);
   }
 
   /**

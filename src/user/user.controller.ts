@@ -42,19 +42,13 @@ export class UserController {
   findAll(@Query() query: any) {
     return this.userService.getAllUsers(query);
   }
-  @Get('info')
-  @UseGuards(AuthGuard)
-  getUserInfo(@CurrentUser() payload:JwtPayloadType) {
-    return this.userService.getUserInfo(payload.id);
-  }
   @Get(':id')
   @UseGuards(AuthGuard)
-  findOne(@Param('id', MongoIdValidationPipe) id: string) {
-    return this.userService.findOne(id);
+  findOne(@Param('id', MongoIdValidationPipe) id: string,@CurrentUser() payload: JwtPayloadType) {
+    return this.userService.getSpecialUser(id,payload);
   }
 
  
-
   @Patch(':id')
   @UseGuards(AuthGuard)
   update(
@@ -73,3 +67,6 @@ export class UserController {
     await this.userService.remove(id);
   }
 }
+
+
+
