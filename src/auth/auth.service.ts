@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { SignInDto } from './dto/sign-in.dto';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
+import { stanizeUser } from 'src/utils/helper-functions';
 
 @Injectable()
 export class AuthService {
@@ -19,17 +20,18 @@ export class AuthService {
   public async signUp(signUpDto: SignInDto) {
     const user = await this.userModel.findOne({ email: signUpDto.email });
     if (user) {
-      throw new Error('User already exists');
+      throw new BadRequestException('User already exists');
     }
     const hashedPassword = await bcrypt.hash(signUpDto.password, 10);
     const createdUser = await this.userModel.create({
       ...signUpDto,
       password: hashedPassword,
     });
+
     return {
       status: 'success',
       message: 'User created successfully',
-      user: createdUser,
+      user: stanizeUser(createdUser),
     };
   }
 
@@ -52,7 +54,7 @@ export class AuthService {
     return {
       status: 'success',
       message: 'User logged in successfully',
-      data: user,
+      data: stanizeUser(user),
       accessToken,
     };
   }

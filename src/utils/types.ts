@@ -1,3 +1,5 @@
+import { User } from "src/user/schemas/user.schema";
+
 export type JwtPayloadType = {
   id: string;
   role: string;
@@ -11,14 +13,4 @@ export interface IPaginationResult {
   previousPage?: number;
 }
 
-export interface ISanitizedUser {
-  id: string;
-  name: string;
-  email: string;
-  phoneNumber?: string;
-  avatar?: string;
-  active?: boolean;
-  age?: number;
-  address?: string;
-  gender?: string;
-}
+export type UserSanitized = Omit<User, "password">

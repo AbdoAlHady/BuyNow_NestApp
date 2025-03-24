@@ -15,9 +15,11 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { MongoIdValidationPipe } from 'src/utils/pipes/mongo-id-validation.pipe';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { AuthGuard } from './guard/auth.guard';
-import { AuthRolesGuard } from './guard/auth-roles.guard';
-import { Roles } from './decorators/roles.decorator';
+import { AuthGuard } from '../auth/guard/auth.guard';
+import { AuthRolesGuard } from '../auth/guard/auth-roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { JwtPayloadType } from 'src/utils/types';
 // import { AuthGuard } from './guard/auth.guard';
 // import { AuthRolesGuard } from './guard/auth-roles.guard';
 // import { Roles } from './decorators/roles.decorator';
@@ -40,22 +42,27 @@ export class UserController {
   findAll(@Query() query: any) {
     return this.userService.getAllUsers(query);
   }
-
+  @Get('info')
+  @UseGuards(AuthGuard)
+  getUserInfo(@CurrentUser() payload:JwtPayloadType) {
+    return this.userService.getUserInfo(payload.id);
+  }
   @Get(':id')
-  @UseGuards(AuthGuard,AuthRolesGuard)
-  @Roles(['admin','user'])
+  @UseGuards(AuthGuard)
   findOne(@Param('id', MongoIdValidationPipe) id: string) {
     return this.userService.findOne(id);
   }
 
+ 
+
   @Patch(':id')
-  @UseGuards(AuthGuard,AuthRolesGuard)
-  @Roles(['admin'])
+  @UseGuards(AuthGuard)
   update(
     @Param('id', MongoIdValidationPipe) id: string,
+    @CurrentUser() payload: JwtPayloadType,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    return this.userService.update(id, updateUserDto);
+    return this.userService.update(id, updateUserDto, payload);
   }
 
   @Delete(':id')
