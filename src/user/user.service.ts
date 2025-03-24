@@ -6,7 +6,6 @@ import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { BaseService } from 'src/utils/services/base.service';
-import { JwtPayloadType } from 'src/utils/types';
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -53,8 +52,7 @@ export class UserService extends BaseService<User> {
    * @access Admin
    * @returns The found user from the database
    */
-  public async getSpecialUser(userId: string, payload: JwtPayloadType) {
-    await this.validateUserPermission(userId, payload);
+  public async getSpecialUser(userId: string) {
     return await this.findOne(userId);
   }
 
@@ -68,9 +66,7 @@ export class UserService extends BaseService<User> {
   public async update(
     id: string,
     updateUserDto: UpdateUserDto,
-    payload: JwtPayloadType,
   ) {
-    await this.validateUserPermission(id, payload);
     return await this.updateOne(id, updateUserDto);
   }
 
@@ -93,15 +89,5 @@ export class UserService extends BaseService<User> {
     return await bcrypt.hash(password, 10);
   }
 
-  /**
-   *  Validate user permission
-   * @param id
-   * @param payload
-   */
-  private async validateUserPermission(id: string, payload: JwtPayloadType) {
-    const user = await this.findOne(id);
-    if (user.data._id.toString() !== payload.id && payload.role !== 'admin') {
-      throw new BadRequestException('You are not allowed to update this user');
-    }
-  }
+
 }
