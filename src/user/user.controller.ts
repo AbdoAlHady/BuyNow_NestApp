@@ -20,10 +20,7 @@ import { AuthRolesGuard } from '../auth/guard/auth-roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtPayloadType } from 'src/utils/types';
-// import { AuthGuard } from './guard/auth.guard';
-// import { AuthRolesGuard } from './guard/auth-roles.guard';
-// import { Roles } from './decorators/roles.decorator';
-// import { UpdateUserDto } from './dto/update-user.dto';
+
 
 @Controller('users')
 export class UserController {
@@ -43,14 +40,16 @@ export class UserController {
     return this.userService.getAllUsers(query);
   }
   @Get(':id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard,AuthRolesGuard)
+  @Roles(['admin'])
   findOne(@Param('id', MongoIdValidationPipe) id: string,@CurrentUser() payload: JwtPayloadType) {
     return this.userService.getSpecialUser(id,payload);
   }
 
  
   @Patch(':id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard,AuthRolesGuard)
+  @Roles(['admin'])
   update(
     @Param('id', MongoIdValidationPipe) id: string,
     @CurrentUser() payload: JwtPayloadType,
