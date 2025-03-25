@@ -13,6 +13,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ParseQueryInterceptor } from './utils/interceptors/parse-query.interceptor';
 import { AuthModule } from './auth/auth.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { AuthModule } from './auth/auth.module';
       },
       inject: [ConfigService],
     }),
+   
 
     JwtModule.registerAsync({
       global: true,
@@ -52,6 +54,7 @@ import { AuthModule } from './auth/auth.module';
       
       inject: [ConfigService],
     }),
+    MailModule,
     UserModule,
     AuthModule,
   ],

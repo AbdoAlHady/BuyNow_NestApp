@@ -14,3 +14,11 @@ export interface IPaginationResult {
 }
 
 export type UserSanitized = Omit<User, "password">
+
+export type SendEmailOptions = {
+  to: string;
+  from?: string;
+  subject: string;
+  template: string;
+  text: string;
+}
