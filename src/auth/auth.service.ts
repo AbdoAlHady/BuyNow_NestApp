@@ -8,6 +8,8 @@ import { SignInDto } from './dto/sign-in.dto';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { stanizeUser } from 'src/utils/helper-functions';
+import { ForgetPasswordDto } from './dto/forget-passowrd.dto';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +19,11 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
+  /**
+   * Sign up a new user
+   * @param signUpDto - The sign up data
+   * @returns The created user data
+   */
   public async signUp(signUpDto: SignInDto) {
     const user = await this.userModel.findOne({ email: signUpDto.email });
     if (user) {
@@ -35,6 +42,11 @@ export class AuthService {
     };
   }
 
+  /**
+   * Sign in an existing user
+   * @param signInDto - The sign in data
+   * @returns The access token and user data
+   */
   public async signIn(signInDto: SignInDto) {
     const user = await this.userModel.findOne({ email: signInDto.email });
     if (!user) {
@@ -57,5 +69,29 @@ export class AuthService {
       data: stanizeUser(user),
       accessToken,
     };
+  }
+
+  public async forgetPassword(forgetPasswordDto: ForgetPasswordDto) {
+    const user = await this.userModel.findOne({
+      email: forgetPasswordDto.email,
+    });
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+    // generate code
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const hashResetcode = this.encryptCode(code);
+    user.verificationCode = hashResetcode;
+    user.verificationCodeExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+    await user.save();
+
+    return {
+      status: 'success',
+      message: 'Verification code sent to your email',
+    };
+  }
+
+  private encryptCode(code: string): string {
+    return crypto.createHash('sha256').update(code).digest('hex');
   }
 }
