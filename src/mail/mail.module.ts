@@ -19,6 +19,7 @@ import { MailService } from './mail.service';
           },
         };
       },
+      inject: [ConfigService],
     }),
   ],
   controllers: [],

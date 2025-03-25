@@ -10,6 +10,7 @@ import * as bcrypt from 'bcrypt';
 import { stanizeUser } from 'src/utils/helper-functions';
 import { ForgetPasswordDto } from './dto/forget-passowrd.dto';
 import * as crypto from 'crypto';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +18,7 @@ export class AuthService {
     @InjectModel(User.name) private userModel: Model<User>,
     private readonly jwtSerivce: JwtService,
     private readonly configService: ConfigService,
+    private readonly mailService: MailService,
   ) {}
 
   /**
@@ -71,6 +73,11 @@ export class AuthService {
     };
   }
 
+  /**
+   *  Send a verification code to the user's email for password reset
+   * @param forgetPasswordDto
+   * @returns  - The status and message of the operation
+   */
   public async forgetPassword(forgetPasswordDto: ForgetPasswordDto) {
     const user = await this.userModel.findOne({
       email: forgetPasswordDto.email,
@@ -84,13 +91,26 @@ export class AuthService {
     user.verificationCode = hashResetcode;
     user.verificationCodeExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
     await user.save();
+    const message = `Hi ${user.name} \n We received a request to reset your password on your BuyNow Account.\n ${code} \n Enter this code to reset your password.\n This code will expire in 10 minutes. \n Do not share this code with anyone. \n If you did not request a password reset, please ignore this email or reply to let us know. \n Thanks, \n The BuyNow Team`;
+
+    // send email
+    await this.mailService.sendEmail({
+      to: user.email,
+      subject: 'Password Reset Code',
+      text: message,
+    });
 
     return {
       status: 'success',
       message: 'Verification code sent to your email',
     };
   }
-
+  
+  /**
+   * Encrypt the verification code using SHA-256
+   * @param code
+   * @returns
+   */
   private encryptCode(code: string): string {
     return crypto.createHash('sha256').update(code).digest('hex');
   }

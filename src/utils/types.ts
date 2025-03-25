@@ -19,6 +19,6 @@ export type SendEmailOptions = {
   to: string;
   from?: string;
   subject: string;
-  template: string;
-  text: string;
+  template?: string;
+  text?: string;
 }
