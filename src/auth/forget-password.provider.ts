@@ -7,6 +7,7 @@ import * as crypto from 'crypto';
 import * as bcrypt from 'bcrypt';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { MailService } from 'src/mail/mail.service';
+import { generateCode } from 'src/utils/helper-functions';
 
 @Injectable()
 export class ForgetPasswordProvider {
@@ -25,7 +26,7 @@ export class ForgetPasswordProvider {
       throw new BadRequestException('User not found');
     }
     // generate code
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const code =generateCode();
     const hashResetcode = this.encryptCode(code);
     user.verificationCode = hashResetcode;
     user.verificationCodeExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes

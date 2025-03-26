@@ -7,11 +7,12 @@ import { JwtService } from '@nestjs/jwt';
 import { SignInDto } from './dto/sign-in.dto';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
-import { stanizeUser } from 'src/utils/helper-functions';
+import { generateCode, stanizeUser } from 'src/utils/helper-functions';
 import { ForgetPasswordDto } from './dto/forget-passowrd.dto';
 import { VerifyCodeDto } from './dto/verify-code.dto';
 import { ForgetPasswordProvider } from './forget-password.provider';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +21,7 @@ export class AuthService {
     private readonly jwtSerivce: JwtService,
     private readonly configService: ConfigService,
     private readonly forgetPasswordProvider: ForgetPasswordProvider,
+    private readonly mailService: MailService,
   ) {}
 
   /**
@@ -38,9 +40,23 @@ export class AuthService {
       password: hashedPassword,
     });
 
+    const code = generateCode();
+    const hashResetcode = this.forgetPasswordProvider.encryptCode(code);
+    createdUser.verificationCode = hashResetcode;
+    createdUser.verificationCodeExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+    await createdUser.save();
+
+    const message = `Hi ${createdUser.name} \n Welcome to BuyNow! \n Your verification code is ${code}. \n This code will expire in 10 minutes. \n Do not share this code with anyone. \n If you did not request a password reset, please ignore this email or reply to let us know. \n Thanks, \n The BuyNow Team`;
+    // send email
+    await this.mailService.sendEmail({
+      to: createdUser.email,
+      subject: 'Your verification code (valid for 10 minutes)',
+      text: message,
+    });
+
     return {
       status: 'success',
-      message: 'User created successfully',
+      message: 'User created successfully, please check your email for verification code',
       user: stanizeUser(createdUser),
     };
   }
@@ -101,8 +117,6 @@ export class AuthService {
   public async resetPassword(resetPasswordDto: ResetPasswordDto) {
     return this.forgetPasswordProvider.resetPassword(resetPasswordDto);
   }
-
-
 
   /**
    * Reset the user's password
