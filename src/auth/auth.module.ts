@@ -4,6 +4,7 @@ import { AuthController } from './auth.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from 'src/user/schemas/user.schema';
 import { MailModule } from 'src/mail/mail.module';
+import { ForgetPasswordProvider } from './forget-password.provider';
 
 @Module({
   imports: [
@@ -16,6 +17,6 @@ import { MailModule } from 'src/mail/mail.module';
     MailModule
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [ForgetPasswordProvider,AuthService],
 })
 export class AuthModule {}

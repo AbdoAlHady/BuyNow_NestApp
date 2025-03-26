@@ -3,6 +3,7 @@ import { User } from "src/user/schemas/user.schema";
 export type JwtPayloadType = {
   id: string;
   role: string;
+  iat: number;
 };
 
 export interface IPaginationResult {

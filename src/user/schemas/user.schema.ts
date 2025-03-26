@@ -55,6 +55,9 @@ export class User {
   @Prop({ type: Date })
   verificationCodeExpires: Date;
 
+  @Prop({ type: Date })
+  changePasswordDate: Date;
+
   @Prop({ type: String, enum: ['male', 'female'] })
   gender: string;
 }
