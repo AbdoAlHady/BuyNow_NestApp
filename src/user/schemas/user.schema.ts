@@ -46,8 +46,11 @@ export class User {
   @Prop({ type: String })
   address: string;
 
-  @Prop({ type: Boolean, default: false })
+  @Prop({ type: Boolean, default: true })
   active: boolean;
+
+  @Prop({ type: Boolean, default: false })
+  isVerified: boolean;
 
   @Prop({ type: String })
   verificationCode: string;

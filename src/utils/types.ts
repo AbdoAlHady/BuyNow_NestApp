@@ -1,4 +1,3 @@
-import { User } from "src/user/schemas/user.schema";
 
 export type JwtPayloadType = {
   id: string;
@@ -14,7 +13,13 @@ export interface IPaginationResult {
   previousPage?: number;
 }
 
-export type UserSanitized = Omit<User, "password">
+// export type UserSanitized = Omit<
+//   User,
+//   | 'password'
+//   | 'verificationCode'
+//   | 'verificationCodeExpires'
+//   | 'changePasswordDate'
+// >;
 
 export type SendEmailOptions = {
   to: string;
@@ -22,4 +27,4 @@ export type SendEmailOptions = {
   subject: string;
   template?: string;
   text?: string;
-}
+};

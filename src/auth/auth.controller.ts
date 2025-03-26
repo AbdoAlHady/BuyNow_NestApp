@@ -33,4 +33,9 @@ export class AuthController {
   resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     return this.authService.resetPassword(resetPasswordDto);
   }
+
+  @Patch('verify-email')
+  verifyEmail(@Body() verifyEmailDto: VerifyCodeDto) {
+    return this.authService.verifyEmail(verifyEmailDto);
+  }
 }

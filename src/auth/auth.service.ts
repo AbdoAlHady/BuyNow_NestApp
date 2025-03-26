@@ -56,7 +56,8 @@ export class AuthService {
 
     return {
       status: 'success',
-      message: 'User created successfully, please check your email for verification code',
+      message:
+        'User created successfully, please check your email for verification code',
       user: stanizeUser(createdUser),
     };
   }
@@ -105,7 +106,11 @@ export class AuthService {
    * @returns - The status of the operation
    */
   public async verifyResetPasswordCode(verifyPasswardCodeDto: VerifyCodeDto) {
-    return this.verifyCode(verifyPasswardCodeDto);
+    await this.verifyCode(verifyPasswardCodeDto.code);
+    return {
+      status: 'success',
+      message: 'Reset code verified successfully',
+    };
   }
 
   /**
@@ -119,12 +124,29 @@ export class AuthService {
   }
 
   /**
+   *  Verify the user's account using the verification code
+   * @param verifyCodeDto
+   * @returns  - The status and message of the operation
+   */
+  public async verifyEmail(verifyCodeDto: VerifyCodeDto) {
+    const { code } = verifyCodeDto;
+    const user = await this.verifyCode(code);
+    user.isVerified = true;
+    user.verificationCode = null as any;
+    user.verificationCodeExpires = null as any;
+    await user.save();
+    return {
+      status: 'success',
+      message: 'Account verified successfully',
+    };
+  }
+
+  /**
    * Reset the user's password
-   * @param resetPasswordDto - The reset password data
+   * @param verifyCodeDto - The reset password data
    * @returns The status of the operation
    */
-  private async verifyCode(verifyPasswardCodeDto: VerifyCodeDto) {
-    const { code } = verifyPasswardCodeDto;
+  private async verifyCode(code: string) {
     const user = await this.userModel.findOne({
       verificationCode: this.forgetPasswordProvider.encryptCode(code),
       verificationCodeExpires: { $gt: new Date() },
@@ -132,8 +154,6 @@ export class AuthService {
     if (!user) {
       throw new BadRequestException('Invalid or Expired reset code');
     }
-    return {
-      status: 'success',
-    };
+    return user;
   }
 }
