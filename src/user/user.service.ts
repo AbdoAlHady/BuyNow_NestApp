@@ -49,7 +49,7 @@ export class UserService extends BaseService<User> {
   /**
    * Find a user by ID
    * @param userId - The ID of the user to find
-   * @access Public
+   * @access Admin
    * @returns The found user from the database
    */
   public async getSpecialUser(userId: string) {
@@ -63,9 +63,13 @@ export class UserService extends BaseService<User> {
    * @returns  The updated user from the database
    * @access Admin
    */
-  public async update(id: string, updateUserDto: UpdateUserDto) {
+  public async update(
+    id: string,
+    updateUserDto: UpdateUserDto,
+  ) {
     return await this.updateOne(id, updateUserDto);
   }
+
   /**
    * Delete a user by ID
    * @param id - The ID of the user to delete
@@ -84,4 +88,6 @@ export class UserService extends BaseService<User> {
   private async hashPassword(password: string): Promise<string> {
     return await bcrypt.hash(password, 10);
   }
+
+
 }

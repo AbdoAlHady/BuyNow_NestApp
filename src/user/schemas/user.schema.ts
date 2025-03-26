@@ -23,13 +23,12 @@ export class User {
     unique: true,
   })
   email: string;
-
+  
   @Prop({ type: String, required: true })
   password: string;
 
   @Prop({
     type: String,
-    required: true,
     enum: ['user', 'admin', 'manager'],
     default: 'user',
   })
@@ -47,14 +46,20 @@ export class User {
   @Prop({ type: String })
   address: string;
 
-  @Prop({ type: Boolean, default: false })
+  @Prop({ type: Boolean, default: true })
   active: boolean;
+
+  @Prop({ type: Boolean, default: false })
+  isVerified: boolean;
 
   @Prop({ type: String })
   verificationCode: string;
 
   @Prop({ type: Date })
   verificationCodeExpires: Date;
+
+  @Prop({ type: Date })
+  changePasswordDate: Date;
 
   @Prop({ type: String, enum: ['male', 'female'] })
   gender: string;

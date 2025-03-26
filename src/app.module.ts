@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import {Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './user/user.module';
@@ -12,6 +12,8 @@ import * as path from 'path';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ParseQueryInterceptor } from './utils/interceptors/parse-query.interceptor';
+import { AuthModule } from './auth/auth.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -36,6 +38,7 @@ import { ParseQueryInterceptor } from './utils/interceptors/parse-query.intercep
       },
       inject: [ConfigService],
     }),
+   
 
     JwtModule.registerAsync({
       global: true,
@@ -51,7 +54,9 @@ import { ParseQueryInterceptor } from './utils/interceptors/parse-query.intercep
       
       inject: [ConfigService],
     }),
+    MailModule,
     UserModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [
@@ -59,6 +64,7 @@ import { ParseQueryInterceptor } from './utils/interceptors/parse-query.intercep
       provide: APP_INTERCEPTOR,
       useClass: ParseQueryInterceptor, // ✅ تطبيقه تلقائيًا على كل الطلبات
     },
+   
   ],
 })
 export class AppModule {}

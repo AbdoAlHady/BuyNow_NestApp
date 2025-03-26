@@ -17,7 +17,8 @@ export class AuthRolesGuard implements CanActivate {
 
     const request:Request = context.switchToHttp().getRequest();
     const user:JwtPayloadType = request['user'] as JwtPayloadType;
-
+    console.log(user);
+    console.log(requiredRoles);
     if (!user || !requiredRoles.includes(user.role)) {
       throw new ForbiddenException('Access denied,you are not allowed to access this resource');
     }

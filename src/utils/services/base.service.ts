@@ -12,7 +12,7 @@ export class BaseService<T> {
    * @param queryParams - query params for filtering and pagination
    * @return paginated documents from db
    */
-  public async findAll(queryParams: any, populationOpt?: string,select?: string) {
+  protected async findAll(queryParams: any, populationOpt?: string,select?: string) {
     const totalDocuments = await this.model.countDocuments();
     const apiFeatures = new ApiFeatures<T>(this.model.find(), queryParams)
       .filter()
@@ -39,7 +39,7 @@ export class BaseService<T> {
    * @param populationOpt - optional population options
    * @return found document from db
    */
-  public async findOne(id: string, populationOpt?: string) {
+  protected async findOne(id: string, populationOpt?: string) {
     let query = this.model.findById(id);
     if (populationOpt) {
       query = query.populate(populationOpt);
@@ -58,7 +58,7 @@ export class BaseService<T> {
    * @param data - data to create document
    * @return created document from db
    */
-  public async createOne(data: Partial<T>) {
+  protected async createOne(data: Partial<T>) {
     const document = await this.model.create(data);
     return {
       data: document,
@@ -71,7 +71,7 @@ export class BaseService<T> {
    * @param data
    * @return updated document from db
    */
-  public async updateOne(id: string, data: Partial<T>) {
+  protected async updateOne(id: string, data: Partial<T>) {
     const newDocument = await this.model.findByIdAndUpdate(id, data, {
       new: true,
     });
@@ -89,7 +89,7 @@ export class BaseService<T> {
    * delete document by id
    * @param id
    */
-  public async deleteOne(id: string): Promise<void> {
+  protected async deleteOne(id: string): Promise<void> {
     const document = await this.model.findById(id);
     if (!document) {
       throw new NotFoundException(`Document not found`);
