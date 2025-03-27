@@ -4,6 +4,7 @@ import { Category } from './schemas/category-schema';
 import { Model } from 'mongoose';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { BaseService } from 'src/utils/services/base.service';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
 export class CategoryService extends BaseService<Category> {
@@ -38,8 +39,35 @@ export class CategoryService extends BaseService<Category> {
     return await this.findAll(query);
   }
 
+  /**
+   * Get a category by id
+   * @param id - The id of the category to find
+   * @returns  The found category data from the database
+   * @access  All authenticated users can access this endpoint
+   */
   public async getCategoryById(id: string) {
     return await this.findOne(id);
+  }
+
+  /**
+   * Update a category by id
+   * @param id
+   * @param updateCategoryDto
+   * @returns  The updated category data from the database
+   * @access  Only admin can update a category
+   */
+  public async updateCatgory(id: string, updateCategoryDto: UpdateCategoryDto) {
+    return await this.updateOne(id, updateCategoryDto);
+  }
+
+  /**
+   * Delete a category by id
+   * @param id 
+   * @returns  no content
+   * @access  Only admin can delete a category
+   */
+  public async deleteCategory(id: string) {
+    return await this.deleteOne(id);
   }
 
   /**
