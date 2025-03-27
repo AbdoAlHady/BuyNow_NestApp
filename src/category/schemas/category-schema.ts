@@ -5,7 +5,7 @@ export type CategoryDocument = HydratedDocument<Category>;
 
 @Schema({timestamps: true,versionKey: false})
 export class Category {
-  @Prop({ type: String, required: true, minlength: 3, maxlength: 30 })
+  @Prop({ type: String, required: true, minlength: 3, maxlength: 30, unique: true })
   name: string;
 
   @Prop({ type: String})
