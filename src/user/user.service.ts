@@ -6,6 +6,8 @@ import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { BaseService } from 'src/utils/services/base.service';
+import { ProfileUpdateUserDto } from './dto/profile-update-user.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -65,7 +67,7 @@ export class UserService extends BaseService<User> {
    */
   public async update(
     id: string,
-    updateUserDto: UpdateUserDto,
+    updateUserDto: UpdateUserDto | ProfileUpdateUserDto,
   ) {
     return await this.updateOne(id, updateUserDto);
   }
@@ -76,8 +78,46 @@ export class UserService extends BaseService<User> {
    * @returns  void
    * @access Admin
    */
-  public async remove(id: string): Promise<void> {
-    await this.deleteOne(id);
+  public async remove(id: string) {
+    const user = await this.userModel.findById(id);
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+    await this.userModel.findByIdAndUpdate(id, { active: false });
+    return {
+      status: 'success',
+      message: 'User deleted successfully',
+    };
+  }
+
+  /**
+   * Change the password of a user
+   * @param changePasswordDto - The new password data
+   * @param userId - The ID of the user to change the password for
+   * @returns  The updated user from the database
+   */
+  public async changePassword(
+    changePasswordDto: ChangePasswordDto,
+    userId: string,
+  ) {
+    const user = await this.findOne(userId);
+
+    const isMatch = await bcrypt.compare(
+      changePasswordDto.oldPassword,
+      user.data.password,
+    );
+    if (!isMatch) {
+      throw new BadRequestException('Old password is incorrect');
+    }
+    const newPassward = await this.hashPassword(changePasswordDto.newPassword);
+    await this.updateOne(userId, {
+      password: newPassward,
+      changePasswordDate: new Date(),
+    });
+    return {
+      status: 'success',
+      message: 'Password changed successfully',
+    };
   }
 
   /**
@@ -88,6 +128,4 @@ export class UserService extends BaseService<User> {
   private async hashPassword(password: string): Promise<string> {
     return await bcrypt.hash(password, 10);
   }
-
-
 }
