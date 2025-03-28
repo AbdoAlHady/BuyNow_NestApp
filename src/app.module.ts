@@ -14,6 +14,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ParseQueryInterceptor } from './utils/interceptors/parse-query.interceptor';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { MailModule } from './mail/mail.module';
     MailModule,
     UserModule,
     AuthModule,
+    CategoryModule,
   ],
   controllers: [],
   providers: [
