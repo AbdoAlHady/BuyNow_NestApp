@@ -1,10 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Category } from './schemas/category-schema';
+import { Category, CategoryDocument } from './schemas/category-schema';
 import { Model } from 'mongoose';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { BaseService } from 'src/utils/services/base.service';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { existsSync, unlinkSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 @Injectable()
 export class CategoryService extends BaseService<Category> {
@@ -20,11 +22,17 @@ export class CategoryService extends BaseService<Category> {
    * @returns  The created category data from the database
    * @access  Only admin can create a category
    */
-  public async createCategory(createCategoryDto: CreateCategoryDto) {
+  public async createCategory(
+    createCategoryDto: CreateCategoryDto,
+    image?: string,
+  ) {
     const { name } = createCategoryDto;
     const existingCategory = await this.findCategoryByName(name);
     if (existingCategory) {
       throw new BadRequestException('Category already exists');
+    }
+    if (image) {
+      createCategoryDto.image = image;
     }
     return await this.createOne(createCategoryDto);
   }
@@ -56,18 +64,64 @@ export class CategoryService extends BaseService<Category> {
    * @returns  The updated category data from the database
    * @access  Only admin can update a category
    */
-  public async updateCatgory(id: string, updateCategoryDto: UpdateCategoryDto) {
-    return await this.updateOne(id, updateCategoryDto);
+  public async updateCatgory(
+    id: string,
+    updateCategoryDto: UpdateCategoryDto,
+    image?: string,
+  ) {
+    const category = await this.categoryModel.findById(id);
+    if (!category) {
+      throw new BadRequestException('Category not found');
+    }
+    if (image) {
+      if (category.image) {
+        const imageName = category.image.split('/').pop();
+
+        const imagePath = resolve('uploads/categories', imageName!);
+        if (existsSync(imagePath)) {
+          unlinkSync(imagePath);
+          console.log('✅ Old image deleted:', imagePath);
+        }
+      }
+      category.image = image;
+    }
+    category.name = updateCategoryDto.name ?? category.name;
+    await category.save();
+    return {
+      data: category,
+    };
   }
 
   /**
    * Delete a category by id
-   * @param id 
+   * @param id
    * @returns  no content
    * @access  Only admin can delete a category
    */
   public async deleteCategory(id: string) {
-    return await this.deleteOne(id);
+    const category = await this.categoryModel.findById(id);
+    if (!category) {
+      throw new BadRequestException('Category not found');
+    }
+    this.removeCategoryImage(category);
+
+    await this.deleteOne(id);
+  }
+
+  /**
+   * Remove the category image from the file system
+   * @param category - The category document to remove the image from
+   * @access  private method, used internally
+   */
+  private removeCategoryImage(category: CategoryDocument) {
+    if (category.image) {
+      const imageName = category.image.split('/').pop();
+      const imagePath = resolve('uploads/categories', imageName!);
+      if (existsSync(imagePath)) {
+        unlinkSync(imagePath);
+        console.log('✅ Old image deleted:', imagePath);
+      }
+    }
   }
 
   /**

@@ -9,7 +9,9 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -18,6 +20,7 @@ import { AuthGuard } from 'src/auth/guard/auth.guard';
 import { AuthRolesGuard } from 'src/auth/guard/auth-roles.guard';
 import { MongoIdValidationPipe } from 'src/utils/pipes/mongo-id-validation.pipe';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('categories')
 @UseGuards(AuthGuard)
@@ -27,8 +30,11 @@ export class CategoryController {
   @Post()
   @UseGuards(AuthRolesGuard)
   @Roles(['admin'])
-  async createCategory(@Body() createCategoryDto: CreateCategoryDto) {
-    return this.categoryService.createCategory(createCategoryDto);
+  @UseInterceptors(
+    FileInterceptor('image'),
+  )
+  async createCategory( @Body() createCategoryDto: CreateCategoryDto,@UploadedFile() image?: Express.Multer.File,) {
+    return this.categoryService.createCategory(createCategoryDto, image?.filename);
   }
 
   @Get()
@@ -44,11 +50,16 @@ export class CategoryController {
   @Patch(':id')
   @UseGuards(AuthRolesGuard)
   @Roles(['admin'])
+  @UseInterceptors(
+    FileInterceptor('image'),
+  )
   async updateCatgory(
     @Param('id', MongoIdValidationPipe) id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
+    @UploadedFile() image?: Express.Multer.File
+
   ) {
-    return this.categoryService.updateCatgory(id, updateCategoryDto);
+    return this.categoryService.updateCatgory(id, updateCategoryDto,image?.filename);
   }
 
   @Delete(':id')
