@@ -7,7 +7,7 @@ export type BrandDocument = HydratedDocument<Brand>;
   timestamps: true,
   versionKey: false,
 })
-class Brand {
+export class Brand {
   @Prop({
     required: true,
     unique: true,
