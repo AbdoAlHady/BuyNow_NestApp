@@ -1,9 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Brand } from './schema/brand.schema';
+import { Brand, BrandDocument } from './schema/brand.schema';
 import { Model } from 'mongoose';
 import { BaseService } from 'src/utils/services/base.service';
+import { UpdateBrandDto } from './dto/update-brand.dto';
+import { resolve } from 'node:path';
+import { existsSync, unlinkSync } from 'node:fs';
 
 @Injectable()
 export class BrandService extends BaseService<Brand> {
@@ -21,14 +24,43 @@ export class BrandService extends BaseService<Brand> {
       createBrandDto.image = image;
     }
     const brand = await this.brandModel.create(createBrandDto);
-    return brand;
+    return {
+      status: 'success',
+      data: brand,
+    };
   }
 
-  public async getAllBrands(query:any) {
+  public async getAllBrands(query: any) {
     return await this.findAll(query);
+  }
+
+  public async getSpecificBrand(id: string) {
+    return await this.findOne(id);
+  }
+
+  public async updateBrand(id: string, dto: UpdateBrandDto, image?: string) {
+    const brand = await this.brandModel.findById(id);
+    if (!brand) throw new BadRequestException('Brand not found');
+
+    if (image) {
+      this.handleImage(brand);
+      dto.image = image;
+    }
+    return await this.updateOne(id, dto);
   }
 
   private async getBrandByName(name: string) {
     return await this.brandModel.findOne({ name });
+  }
+
+  private handleImage(brand: BrandDocument) {
+    if (brand.image) {
+      const imageName = brand.image.split('/').pop();
+      const imagePath = resolve('uploads/brands', imageName!);
+      if (existsSync(imagePath)) {
+        unlinkSync(imagePath);
+        console.log('✅ Old image deleted:', imagePath);
+      }
+    }
   }
 }

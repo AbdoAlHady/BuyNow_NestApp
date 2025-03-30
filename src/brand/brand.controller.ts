@@ -1,34 +1,62 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  UseInterceptors,
+  UploadedFile,
+  UseGuards,
+} from '@nestjs/common';
 import { BrandService } from './brand.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from 'src/auth/guard/auth.guard';
+import { AuthRolesGuard } from 'src/auth/guard/auth-roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { MongoIdValidationPipe } from 'src/utils/pipes/mongo-id-validation.pipe';
 
-@Controller('brand')
+@Controller('brands')
 export class BrandController {
   constructor(private readonly brandService: BrandService) {}
 
   @Post()
-  create(@Body() createBrandDto: CreateBrandDto) {
-    return this.brandService.create(createBrandDto);
+  @UseInterceptors(FileInterceptor('image'))
+  @UseGuards(AuthGuard, AuthRolesGuard)
+  @Roles(['admin'])
+  createBrand(
+    @Body() createBrandDto: CreateBrandDto,
+    @UploadedFile() image?: Express.Multer.File,
+  ) {
+    return this.brandService.createBrand(createBrandDto, image?.filename);
   }
 
   @Get()
-  findAll() {
-    return this.brandService.findAll();
+  @UseGuards(AuthGuard)
+  getAllBrands(@Query() query: any) {
+    return this.brandService.getAllBrands(query);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.brandService.findOne(+id);
+  @UseGuards(AuthGuard, AuthRolesGuard)
+  @Roles(['admin'])
+  getSpecificBrand(@Param('id', MongoIdValidationPipe) id: string) {
+    return this.brandService.getSpecificBrand(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBrandDto: UpdateBrandDto) {
-    return this.brandService.update(+id, updateBrandDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.brandService.remove(+id);
+  @UseInterceptors(FileInterceptor('image'))
+  @UseGuards(AuthGuard, AuthRolesGuard)
+  @Roles(['admin'])
+  updateBrand(
+    @Param('id', MongoIdValidationPipe) id: string,
+    @Body() updateBrandDto: UpdateBrandDto,
+    @UploadedFile() image?: Express.Multer.File,
+  ) {
+    return this.brandService.updateBrand(id, updateBrandDto, image?.filename);
   }
 }
