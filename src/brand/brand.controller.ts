@@ -10,6 +10,8 @@ import {
   UseInterceptors,
   UploadedFile,
   UseGuards,
+  HttpStatus,
+  HttpCode,
 } from '@nestjs/common';
 import { BrandService } from './brand.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
@@ -58,5 +60,13 @@ export class BrandController {
     @UploadedFile() image?: Express.Multer.File,
   ) {
     return this.brandService.updateBrand(id, updateBrandDto, image?.filename);
+  }
+
+  @Delete(':id')
+  @UseGuards(AuthGuard, AuthRolesGuard)
+  @Roles(['admin'])
+  @HttpCode(HttpStatus.NO_CONTENT)
+  deleteBrand(@Param('id', MongoIdValidationPipe) id: string) {
+    return this.brandService.deleteBrand(id);
   }
 }

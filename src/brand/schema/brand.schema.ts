@@ -19,5 +19,14 @@ export class Brand {
   @Prop({ type: String })
   image: string;
 }
+const setImageUrl = (doc:BrandDocument) => {
+  if (doc.image) {
+    const imageUrl = `http://localhost:3000/brands/${doc.image}`;
+    doc.image = imageUrl;
+  }
+};
 
 export const BrandSchema = SchemaFactory.createForClass(Brand);
+
+BrandSchema.post<BrandDocument>('init', setImageUrl);
+BrandSchema.post<BrandDocument>('save', setImageUrl);

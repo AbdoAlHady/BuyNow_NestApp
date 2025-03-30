@@ -40,17 +40,24 @@ export class BrandService extends BaseService<Brand> {
 
   public async updateBrand(id: string, dto: UpdateBrandDto, image?: string) {
     const brand = await this.brandModel.findById(id);
-    if (!brand) throw new BadRequestException('Brand not found');
-
     if (image) {
-      this.handleImage(brand);
+      this.handleImage(brand!);
       dto.image = image;
     }
     return await this.updateOne(id, dto);
   }
 
+  public async deleteBrand(id: string) {
+    const brand = await this.brandModel.findById(id);
+    if (!brand) throw new BadRequestException('Brand not found');
+    this.handleImage(brand);
+    return await this.deleteOne(id);
+  }
+
   private async getBrandByName(name: string) {
-    return await this.brandModel.findOne({ name });
+    const brand = await this.brandModel.findOne({ name });
+    if (!brand) throw new BadRequestException('Brand not found');
+    return brand;
   }
 
   private handleImage(brand: BrandDocument) {
