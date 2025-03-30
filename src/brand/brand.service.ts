@@ -1,26 +1,34 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateBrandDto } from './dto/create-brand.dto';
-import { UpdateBrandDto } from './dto/update-brand.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Brand } from './schema/brand.schema';
+import { Model } from 'mongoose';
+import { BaseService } from 'src/utils/services/base.service';
 
 @Injectable()
-export class BrandService {
-  create(createBrandDto: CreateBrandDto) {
-    return 'This action adds a new brand';
+export class BrandService extends BaseService<Brand> {
+  constructor(
+    @InjectModel(Brand.name) private readonly brandModel: Model<Brand>,
+  ) {
+    super(brandModel);
   }
 
-  findAll() {
-    return `This action returns all brand`;
+  public async createBrand(createBrandDto: CreateBrandDto, image?: string) {
+    const brandExist = await this.getBrandByName(createBrandDto.name);
+    if (brandExist) throw new BadRequestException('Brand already exists');
+
+    if (image) {
+      createBrandDto.image = image;
+    }
+    const brand = await this.brandModel.create(createBrandDto);
+    return brand;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} brand`;
+  public async getAllBrands(query:any) {
+    return await this.findAll(query);
   }
 
-  update(id: number, updateBrandDto: UpdateBrandDto) {
-    return `This action updates a #${id} brand`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} brand`;
+  private async getBrandByName(name: string) {
+    return await this.brandModel.findOne({ name });
   }
 }
