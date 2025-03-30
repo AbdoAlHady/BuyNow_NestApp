@@ -39,5 +39,6 @@ import { diskStorage } from "multer";
   ],
   controllers: [CategoryController],
   providers: [CategoryService],
+  exports: [MongooseModule],
 })
 export class CategoryModule {}
