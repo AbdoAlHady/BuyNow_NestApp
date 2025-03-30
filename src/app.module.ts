@@ -15,6 +15,7 @@ import { ParseQueryInterceptor } from './utils/interceptors/parse-query.intercep
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import { CategoryModule } from './category/category.module';
+import { SubcategoryModule } from './subcategory/subcategory.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { CategoryModule } from './category/category.module';
     UserModule,
     AuthModule,
     CategoryModule,
+    SubcategoryModule,
   ],
   controllers: [],
   providers: [
