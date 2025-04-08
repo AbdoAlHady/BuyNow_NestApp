@@ -17,6 +17,7 @@ import { MailModule } from './mail/mail.module';
 import { CategoryModule } from './category/category.module';
 import { SubcategoryModule } from './subcategory/subcategory.module';
 import { BrandModule } from './brand/brand.module';
+import { CouponModule } from './coupon/coupon.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { BrandModule } from './brand/brand.module';
     CategoryModule,
     SubcategoryModule,
     BrandModule,
+    CouponModule,
   ],
   controllers: [],
   providers: [
