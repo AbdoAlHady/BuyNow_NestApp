@@ -11,7 +11,7 @@ export class Supplier {
     unique: true,
     trim: true,
     minlength: 3,
-    maxlength: 50,
+    maxlength: 100,
   })
   name: string;
   @Prop({ required: true, type: String })
