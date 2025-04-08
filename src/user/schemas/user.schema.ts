@@ -3,6 +3,7 @@ import { HydratedDocument } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
 
+
 @Schema({
   timestamps: true,
   versionKey: false,
@@ -23,7 +24,7 @@ export class User {
     unique: true,
   })
   email: string;
-  
+
   @Prop({ type: String, required: true })
   password: string;
 
@@ -63,6 +64,9 @@ export class User {
 
   @Prop({ type: String, enum: ['male', 'female'] })
   gender: string;
+
+  createdAt?: Date; // ✅ تعريف createdAt هنا
+  updatedAt?: Date; // ✅ تعريف updatedAt هنا
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

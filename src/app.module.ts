@@ -1,4 +1,4 @@
-import {Module } from '@nestjs/common';
+import {ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './user/user.module';
@@ -69,7 +69,7 @@ import { BrandModule } from './brand/brand.module';
     {
       provide: APP_INTERCEPTOR,
       useClass: ParseQueryInterceptor, // ✅ تطبيقه تلقائيًا على كل الطلبات
-    },
+    }
    
   ],
 })
