@@ -1,10 +1,13 @@
+import { Type } from 'class-transformer';
 import {
   IsDate,
+
   IsNotEmpty,
   IsNumber,
   IsString,
   Length,
   Min,
+  MinDate,
 } from 'class-validator';
 
 export class CreateCouponDto {
@@ -16,7 +19,11 @@ export class CreateCouponDto {
   name: string;
 
   @IsNotEmpty({ message: 'Expire date is required' })
+  @Type(() => Date)
   @IsDate({ message: 'Expire date must be a valid date' })
+  @MinDate(new Date(), {
+    message: 'Expire date must be a future date'
+  })
   expireDate: Date;
 
   @IsNotEmpty({ message: 'Discount is required' })

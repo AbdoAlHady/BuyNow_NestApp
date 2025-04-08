@@ -1,34 +1,50 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, HttpStatus, HttpCode } from '@nestjs/common';
 import { CouponService } from './coupon.service';
 import { CreateCouponDto } from './dto/create-coupon.dto';
 import { UpdateCouponDto } from './dto/update-coupon.dto';
+import { AuthGuard } from 'src/auth/guard/auth.guard';
+import { AuthRolesGuard } from 'src/auth/guard/auth-roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { MongoIdValidationPipe } from 'src/utils/pipes/mongo-id-validation.pipe';
 
-@Controller('coupon')
+@Controller('coupons')
 export class CouponController {
   constructor(private readonly couponService: CouponService) {}
 
   @Post()
+  @UseGuards(AuthGuard,AuthRolesGuard)
+  @Roles(['admin'])
   create(@Body() createCouponDto: CreateCouponDto) {
     return this.couponService.create(createCouponDto);
   }
 
   @Get()
-  findAll() {
-    return this.couponService.findAll();
+  @UseGuards(AuthGuard)
+  getAllCoupons(@Query() query: any) {
+    return this.couponService.getAllCoupons(query);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.couponService.findOne(+id);
+  @UseGuards(AuthGuard,AuthRolesGuard)
+  @Roles(['admin'])
+  getSpecificCoupon(@Param('id', MongoIdValidationPipe)id: string) {
+    return this.couponService.getSpecificCoupon(id);
   }
 
+
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCouponDto: UpdateCouponDto) {
-    return this.couponService.update(+id, updateCouponDto);
+  @UseGuards(AuthGuard,AuthRolesGuard)
+  @Roles(['admin'])
+  updateCoupon(@Param('id', MongoIdValidationPipe)id: string,@Body() updateCouponDto: UpdateCouponDto) {
+    return this.couponService.updateCoupon(id, updateCouponDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.couponService.remove(+id);
+  @UseGuards(AuthGuard,AuthRolesGuard)
+  @Roles(['admin'])
+  @HttpCode(HttpStatus.NO_CONTENT)
+  deleteCoupon(@Param('id', MongoIdValidationPipe)id: string) {
+    return this.couponService.deleteCoupon(id);
   }
+
 }
