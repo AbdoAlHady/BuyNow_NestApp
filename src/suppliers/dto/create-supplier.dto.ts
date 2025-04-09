@@ -6,8 +6,8 @@ export class CreateSupplierDto {
     @Length(3, 100, {message: 'Name must be between 3 and 100 characters'})
     name:string;
 
-    @IsNotEmpty({message: 'Email is required'})
-    @IsUrl({}, {message: 'Email must be a valid URL'})
+    @IsNotEmpty({message: 'Website is required'})
+    @IsUrl({}, {message: 'Website must be a valid URL'})
     website:string;
 
 }
