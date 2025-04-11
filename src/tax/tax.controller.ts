@@ -1,34 +1,37 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  UseGuards,
+} from '@nestjs/common';
 import { TaxService } from './tax.service';
 import { CreateTaxDto } from './dto/create-tax.dto';
-import { UpdateTaxDto } from './dto/update-tax.dto';
+import { AuthGuard } from 'src/auth/guard/auth.guard';
+import { AuthRolesGuard } from 'src/auth/guard/auth-roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
-@Controller('tax')
+@UseGuards(AuthGuard, AuthRolesGuard)
+@Controller('taxs')
 export class TaxController {
   constructor(private readonly taxService: TaxService) {}
 
   @Post()
-  create(@Body() createTaxDto: CreateTaxDto) {
-    return this.taxService.create(createTaxDto);
+  @Roles(['admin'])
+  createOrUpdateTax(@Body() createTaxDto: CreateTaxDto) {
+    return this.taxService.createOrUpdateTax(createTaxDto);
   }
 
   @Get()
-  findAll() {
-    return this.taxService.findAll();
+  @Roles(['user','admin'])
+  getTax() {
+    return this.taxService.GetTax();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.taxService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTaxDto: UpdateTaxDto) {
-    return this.taxService.update(+id, updateTaxDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.taxService.remove(+id);
+  @Patch()
+  @Roles(['admin'])
+  resetTax() {
+    return this.taxService.resetTax();
   }
 }
