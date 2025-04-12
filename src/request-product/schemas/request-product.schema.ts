@@ -1,7 +1,9 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { User } from 'src/user/schemas/user.schema';
 
+
+export type RequestProductDocument = RequestProduct & mongoose.Document;
 @Schema({
   timestamps: true,
   versionKey: false,
@@ -42,3 +44,6 @@ export class RequestProduct {
   })
   user: string;
 }
+
+
+export const RequestProductSchema = SchemaFactory.createForClass(RequestProduct); // MongooseModule will handle the schema creation
