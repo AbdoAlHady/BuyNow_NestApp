@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { SubcategoryService } from './subcategory.service';
 import { CreateSubcategoryDto } from './dto/create-subcategory.dto';
-import { ValidateCategoryPipe } from './pipes/validate-category.pipe';
+import { ValidateCategoryPipe } from '../utils/pipes/validate-category.pipe';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
 import { AuthRolesGuard } from 'src/auth/guard/auth-roles.guard';

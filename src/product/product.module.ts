@@ -4,6 +4,7 @@ import { ProductController } from './product.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Product, ProductSchema } from './schemas/product.schema';
 import { UserModule } from 'src/user/user.module';
+import { CategoryModule } from 'src/category/category.module';
 
 @Module({
   controllers: [ProductController],
@@ -15,7 +16,8 @@ import { UserModule } from 'src/user/user.module';
         schema:ProductSchema
       }
     ]),
-    UserModule
+    UserModule,
+    CategoryModule
   ],
 })
 export class ProductModule {}
