@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { SubcategoryService } from './subcategory.service';
 import { CreateSubcategoryDto } from './dto/create-subcategory.dto';
-import { ValidateCategoryPipe } from '../utils/pipes/validate-category.pipe';
+import { CategoryExistValidatePipe } from '../utils/pipes/category-exist-validate.pipe';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
 import { AuthRolesGuard } from 'src/auth/guard/auth-roles.guard';
@@ -28,7 +28,7 @@ export class SubcategoryController {
   @Post()
   @Roles(['admin'])
   @UseGuards(AuthGuard, AuthRolesGuard)
-  @UsePipes(ValidateCategoryPipe)
+  @UsePipes(CategoryExistValidatePipe)
   create(@Body() createSubcategoryDto: CreateSubcategoryDto) {
     return this.subcategoryService.createSubCategory(createSubcategoryDto);
   }
@@ -48,7 +48,7 @@ export class SubcategoryController {
   @Patch(':id')
   @UseGuards(AuthGuard, AuthRolesGuard)
   @Roles(['admin'])
-  @UsePipes(ValidateCategoryPipe)
+  @UsePipes(CategoryExistValidatePipe)
   updateSubCategory(
     @Param('id', MongoIdValidationPipe) id: string,
     @Body() updateSubcategoryDto: UpdateSubcategoryDto,

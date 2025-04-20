@@ -29,7 +29,7 @@ export class Product {
   @Prop({ type: Number, required: true, min: 1, max: 20000 })
   price: number;
 
-  @Prop({ type: Number, required: true, min: 1, max: 20000, default: 0 })
+  @Prop({ type: Number, required: true, min: 0, max: 20000, default: 0 })
   priceAfterDiscount: number;
 
   @Prop({ type: [String] })
@@ -60,23 +60,22 @@ export class Product {
   ratingQuantity: number;
 }
 
+export const ProductSchema = SchemaFactory.createForClass(Product);
 const setImageUrl = (doc: ProductDocument) => {
-  if (doc.imageCover) {
-    const imageUrl = `http://localhost:3000/products/${doc.imageCover}`;
-    doc.imageCover = imageUrl;
+  const baseUrl = process.env.BASE_URL || 'http://localhost:3000/products/'; // Use base URL from environment (e.g., for prod)
+
+  if (doc.imageCover && !doc.imageCover.startsWith('http')) {
+    doc.imageCover = `${baseUrl}${doc.imageCover}`;
   }
+
+  // تحديث images
   if (doc.images && doc.images.length > 0) {
     doc.images = doc.images.map((image) => {
-      return `http://localhost:3000/products/${image}`;
+      return image.startsWith('http') ? image : `${baseUrl}${image}`;
     });
   }
 };
-
-export const BrandSchema = SchemaFactory.createForClass(Brand);
-
 // init => when the document is retrieved from the database (e.g., when you call findOne or findById)
 // save => when the document is saved to the database (e.g., when you call save or create)
-BrandSchema.post<ProductDocument>('init', setImageUrl);
-BrandSchema.post<ProductDocument>('save', setImageUrl);
-
-export const ProductSchema = SchemaFactory.createForClass(Product);
+ProductSchema.post<ProductDocument>('init', setImageUrl);
+ProductSchema.post<ProductDocument>('save', setImageUrl);

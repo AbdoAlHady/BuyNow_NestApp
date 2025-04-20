@@ -6,7 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Category } from 'src/category/schemas/category-schema';
 
-export class ValidateCategoryPipe implements PipeTransform {
+export class CategoryExistValidatePipe implements PipeTransform {
   constructor(
     @InjectModel(Category.name) private readonly categoryModel: Model<Category>,
   ) {}
