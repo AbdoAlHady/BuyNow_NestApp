@@ -33,7 +33,7 @@ export class Product {
   priceAfterDiscount: number;
 
   @Prop({ type: [String] })
-  color: string[];
+  colors: string[];
 
   @Prop({
     required: true,
