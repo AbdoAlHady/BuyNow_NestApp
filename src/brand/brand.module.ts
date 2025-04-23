@@ -42,5 +42,6 @@ import { UserModule } from 'src/user/user.module';
   ],
   controllers: [BrandController],
   providers: [BrandService],
+  exports: [MongooseModule],
 })
 export class BrandModule {}

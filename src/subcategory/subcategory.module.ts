@@ -16,5 +16,6 @@ import { UserModule } from 'src/user/user.module';
   ],
   controllers: [SubcategoryController],
   providers: [SubcategoryService],
+  exports: [MongooseModule],
 })
 export class SubcategoryModule {}

@@ -1,7 +1,9 @@
 import { BadRequestException } from '@nestjs/common';
 import * as crypto from 'crypto';
+import { existsSync, unlinkSync } from 'fs';
 
 import { Types } from 'mongoose';
+import { resolve } from 'path';
 
 export const sa = (id: string): void => {
   if (!Types.ObjectId.isValid(id)) {
@@ -34,4 +36,13 @@ export const generateCode = (): string => {
 
 export const encryptCode = (code: string): string => {
   return crypto.createHash('sha256').update(code).digest('hex');
+};
+
+export const handleImage = (image: string, path: string) => {
+  const imageName = image.split('/').pop();
+  const imagePath = resolve(`uploads/${path}`, imageName!);
+  if (existsSync(imagePath)) {
+    unlinkSync(imagePath);
+    console.log('✅ Old image deleted:', imagePath);
+  }
 };

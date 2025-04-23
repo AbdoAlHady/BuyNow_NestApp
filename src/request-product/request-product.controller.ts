@@ -17,9 +17,9 @@ import { UpdateRequestProductDto } from './dto/update-request-product.dto';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
 import { AuthRolesGuard } from 'src/auth/guard/auth-roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
-import { CurrntUser } from 'src/utils/decorators/current_user_decorators';
+import { CurrntUser } from 'src/common/decorators/current_user_decorators';
 import { JwtPayloadType } from 'src/utils/types';
-import { MongoIdValidationPipe } from 'src/utils/pipes/mongo-id-validation.pipe';
+import { MongoIdValidationPipe } from 'src/common/pipes/mongo-id-validation.pipe';
 
 @UseGuards(AuthGuard, AuthRolesGuard)
 @Controller('request-product')

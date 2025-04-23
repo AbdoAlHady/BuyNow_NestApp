@@ -3,7 +3,7 @@ import { CreateSubcategoryDto } from './dto/create-subcategory.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { SubCategory } from './schema/subcategory.schema';
 import { Model } from 'mongoose';
-import { BaseService } from 'src/utils/services/base.service';
+import { BaseService } from 'src/common/services/base.service';
 import { UpdateSubcategoryDto } from './dto/update-subcategory.dto';
 
 @Injectable()

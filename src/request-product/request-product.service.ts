@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRequestProductDto } from './dto/create-request-product.dto';
 import { UpdateRequestProductDto } from './dto/update-request-product.dto';
-import { BaseService } from 'src/utils/services/base.service';
+import { BaseService } from 'src/common/services/base.service';
 import { RequestProduct } from './schemas/request-product.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';

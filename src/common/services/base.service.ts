@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import ApiFeatures from '../api-features';
+import ApiFeatures from '../../utils/api-features';
 
 @Injectable()
 export class BaseService<T> {

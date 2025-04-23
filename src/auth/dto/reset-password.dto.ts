@@ -5,7 +5,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { Match } from 'src/utils/validators/match.decorator';
+import { Match } from 'src/common/validators/match.decorator';
 
 export class ResetPasswordDto {
   @IsString()

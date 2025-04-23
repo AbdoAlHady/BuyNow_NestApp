@@ -5,7 +5,7 @@ import { UpdateCouponDto } from './dto/update-coupon.dto';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
 import { AuthRolesGuard } from 'src/auth/guard/auth-roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
-import { MongoIdValidationPipe } from 'src/utils/pipes/mongo-id-validation.pipe';
+import { MongoIdValidationPipe } from 'src/common/pipes/mongo-id-validation.pipe';
 
 @Controller('coupons')
 export class CouponController {

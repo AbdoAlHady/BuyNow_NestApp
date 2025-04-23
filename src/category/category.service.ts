@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Category, CategoryDocument } from './schemas/category-schema';
 import { Model } from 'mongoose';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { BaseService } from 'src/utils/services/base.service';
+import { BaseService } from 'src/common/services/base.service';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { existsSync, unlinkSync } from 'node:fs';
 import { resolve } from 'node:path';
