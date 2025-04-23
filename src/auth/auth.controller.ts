@@ -1,0 +1,41 @@
+import { Controller, Post, Body, Patch } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { SignUpDto } from './dto/sign-up.dto';
+import { SignInDto } from './dto/sign-in.dto';
+import { ForgetPasswordDto } from './dto/forget-passowrd.dto';
+import { VerifyCodeDto } from './dto/verify-code.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+
+@Controller('auth')
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
+
+  @Post('signup')
+  signUp(@Body() signUpDto: SignUpDto) {
+    return this.authService.signUp(signUpDto);
+  }
+  @Post('signin')
+  signIn(@Body() signInDto: SignInDto) {
+    return this.authService.signIn(signInDto);
+  }
+
+  @Patch('forget-password')
+  forgetPassword(@Body() forgetPasswordDto: ForgetPasswordDto) {
+    return this.authService.forgetPassword(forgetPasswordDto);
+  }
+
+  @Post('verify-reset-code')
+  verifyResetCode(@Body() verifyResetPasswordCodeDto: VerifyCodeDto) {
+    return this.authService.verifyResetPasswordCode(verifyResetPasswordCodeDto);
+  }
+
+  @Patch('reset-password')
+  resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    return this.authService.resetPassword(resetPasswordDto);
+  }
+
+  @Patch('verify-email')
+  verifyEmail(@Body() verifyEmailDto: VerifyCodeDto) {
+    return this.authService.verifyEmail(verifyEmailDto);
+  }
+}
