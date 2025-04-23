@@ -29,6 +29,7 @@ import {
 } from '@nestjs/platform-express';
 import { UpdateImagesDto } from './dto/update_images_dto';
 import { BrandExistValidatePipe } from 'src/brand/pipes/brand-exist-validate.pipe';
+import { SubCategoryExistValidatePipe } from 'src/subcategory/pipes/subcategory-exist-validate.pipe';
 
 @Controller('products')
 export class ProductController {
@@ -37,7 +38,7 @@ export class ProductController {
   @Post()
   @UseGuards(AuthGuard, AuthRolesGuard)
   @Roles(['admin'])
-  @UsePipes(CategoryExistValidatePipe,BrandExistValidatePipe)
+  @UsePipes(CategoryExistValidatePipe,BrandExistValidatePipe,SubCategoryExistValidatePipe)
   @UseInterceptors(
     FileFieldsInterceptor([
       { name: 'imageCover', maxCount: 1 },
@@ -74,7 +75,7 @@ export class ProductController {
   @Patch(':id')
   @UseGuards(AuthGuard, AuthRolesGuard)
   @Roles(['admin'])
-  @UsePipes(CategoryExistValidatePipe,BrandExistValidatePipe)
+  @UsePipes(CategoryExistValidatePipe,BrandExistValidatePipe,SubCategoryExistValidatePipe)
   @UseInterceptors(
     FileFieldsInterceptor([
       { name: 'imageCover', maxCount: 1 },
