@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { MongoIdValidationPipe } from 'src/utils/pipes/mongo-id-validation.pipe';
+import { MongoIdValidationPipe } from 'src/common/pipes/mongo-id-validation.pipe';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from '../auth/guard/auth.guard';
 import { AuthRolesGuard } from '../auth/guard/auth-roles.guard';

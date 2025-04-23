@@ -4,7 +4,7 @@ import { UpdateSupplierDto } from './dto/update-supplier.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Supplier } from './schemas/supplier.schema';
 import { Model } from 'mongoose';
-import { BaseService } from 'src/utils/services/base.service';
+import { BaseService } from 'src/common/services/base.service';
 
 @Injectable()
 export class SuppliersService extends BaseService<Supplier> {

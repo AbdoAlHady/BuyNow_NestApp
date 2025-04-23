@@ -3,7 +3,7 @@ import { CreateBrandDto } from './dto/create-brand.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Brand, BrandDocument } from './schema/brand.schema';
 import { Model } from 'mongoose';
-import { BaseService } from 'src/utils/services/base.service';
+import { BaseService } from 'src/common/services/base.service';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { resolve } from 'node:path';
 import { existsSync, unlinkSync } from 'node:fs';
@@ -56,7 +56,7 @@ export class BrandService extends BaseService<Brand> {
 
   private async getBrandByName(name: string) {
     const brand = await this.brandModel.findOne({ name });
-    if (!brand) throw new BadRequestException('Brand not found');
+    if (brand) throw new BadRequestException('Brand already exists');
     return brand;
   }
 

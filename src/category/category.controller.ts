@@ -18,7 +18,7 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
 import { AuthRolesGuard } from 'src/auth/guard/auth-roles.guard';
-import { MongoIdValidationPipe } from 'src/utils/pipes/mongo-id-validation.pipe';
+import { MongoIdValidationPipe } from 'src/common/pipes/mongo-id-validation.pipe';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 

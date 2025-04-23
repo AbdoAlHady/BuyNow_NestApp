@@ -21,13 +21,14 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
 import { AuthRolesGuard } from 'src/auth/guard/auth-roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
-import { CategoryExistValidatePipe } from 'src/utils/pipes/category-exist-validate.pipe';
-import { MongoIdValidationPipe } from 'src/utils/pipes/mongo-id-validation.pipe';
+import { CategoryExistValidatePipe } from 'src/common/pipes/category-exist-validate.pipe';
+import { MongoIdValidationPipe } from 'src/common/pipes/mongo-id-validation.pipe';
 import {
   FileFieldsInterceptor,
   FileInterceptor,
 } from '@nestjs/platform-express';
 import { UpdateImagesDto } from './dto/update_images_dto';
+import { BrandExistValidatePipe } from 'src/brand/pipes/brand-exist-validate.pipe';
 
 @Controller('products')
 export class ProductController {
@@ -36,7 +37,7 @@ export class ProductController {
   @Post()
   @UseGuards(AuthGuard, AuthRolesGuard)
   @Roles(['admin'])
-  @UsePipes(CategoryExistValidatePipe)
+  @UsePipes(CategoryExistValidatePipe,BrandExistValidatePipe)
   @UseInterceptors(
     FileFieldsInterceptor([
       { name: 'imageCover', maxCount: 1 },
@@ -73,7 +74,7 @@ export class ProductController {
   @Patch(':id')
   @UseGuards(AuthGuard, AuthRolesGuard)
   @Roles(['admin'])
-  @UsePipes(CategoryExistValidatePipe)
+  @UsePipes(CategoryExistValidatePipe,BrandExistValidatePipe)
   @UseInterceptors(
     FileFieldsInterceptor([
       { name: 'imageCover', maxCount: 1 },

@@ -20,7 +20,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
 import { AuthRolesGuard } from 'src/auth/guard/auth-roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
-import { MongoIdValidationPipe } from 'src/utils/pipes/mongo-id-validation.pipe';
+import { MongoIdValidationPipe } from 'src/common/pipes/mongo-id-validation.pipe';
 
 @Controller('brands')
 export class BrandController {

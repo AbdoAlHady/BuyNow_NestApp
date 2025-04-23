@@ -7,6 +7,7 @@ import { UserModule } from 'src/user/user.module';
 import { CategoryModule } from 'src/category/category.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { BrandModule } from 'src/brand/brand.module';
 
 @Module({
   controllers: [ProductController],
@@ -20,6 +21,7 @@ import { diskStorage } from 'multer';
     ]),
     UserModule,
     CategoryModule,
+    BrandModule,
     MulterModule.register({
       limits: {
         fileSize: 1024 * 1024 * 2, // 5MB

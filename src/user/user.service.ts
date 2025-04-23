@@ -5,7 +5,7 @@ import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { BaseService } from 'src/utils/services/base.service';
+import { BaseService } from 'src/common/services/base.service';
 import { ProfileUpdateUserDto } from './dto/profile-update-user.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 

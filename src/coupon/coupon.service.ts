@@ -4,7 +4,7 @@ import { UpdateCouponDto } from './dto/update-coupon.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Coupon } from './schemas/coupon.schema';
 import { Model } from 'mongoose';
-import { BaseService } from 'src/utils/services/base.service';
+import { BaseService } from 'src/common/services/base.service';
 
 @Injectable()
 export class CouponService extends BaseService<Coupon> {

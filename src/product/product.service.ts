@@ -4,7 +4,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Product } from './schemas/product.schema';
 import { Model } from 'mongoose';
-import { BaseService } from 'src/utils/services/base.service';
+import { BaseService } from 'src/common/services/base.service';
 import { handleImage } from 'src/utils/helper-functions';
 import { UpdateImagesDto } from './dto/update_images_dto';
 
