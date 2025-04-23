@@ -1,4 +1,4 @@
-import {ClassSerializerInterceptor, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './user/user.module';
@@ -11,7 +11,7 @@ import {
 import * as path from 'path';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { ParseQueryInterceptor } from './utils/interceptors/parse-query.interceptor';
+import { ParseQueryInterceptor } from './common/interceptors/parse-query.interceptor';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import { CategoryModule } from './category/category.module';
@@ -22,9 +22,11 @@ import { SuppliersModule } from './suppliers/suppliers.module';
 import { TaxModule } from './tax/tax.module';
 import { RequestProductModule } from './request-product/request-product.module';
 import { ProductModule } from './product/product.module';
+// import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
+
     I18nModule.forRoot({
       fallbackLanguage: 'en',
       loaderOptions: {
@@ -62,6 +64,7 @@ import { ProductModule } from './product/product.module';
       
       inject: [ConfigService],
     }),
+    // CommonModule,
     MailModule,
     UserModule,
     AuthModule,
