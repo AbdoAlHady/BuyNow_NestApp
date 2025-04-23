@@ -23,6 +23,7 @@ import { TaxModule } from './tax/tax.module';
 import { RequestProductModule } from './request-product/request-product.module';
 import { ProductModule } from './product/product.module';
 // import { CommonModule } from './common/common.module';
+import { ReviewModule } from './review/review.module';
 
 @Module({
   imports: [
@@ -76,6 +77,7 @@ import { ProductModule } from './product/product.module';
     TaxModule,
     RequestProductModule,
     ProductModule,
+    ReviewModule,
   ],
   controllers: [],
   providers: [
