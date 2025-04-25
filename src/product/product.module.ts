@@ -13,6 +13,7 @@ import { SubcategoryModule } from 'src/subcategory/subcategory.module';
 @Module({
   controllers: [ProductController],
   providers: [ProductService],
+  exports: [MongooseModule],
   imports: [
     MongooseModule.forFeature([
       {

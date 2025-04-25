@@ -12,7 +12,7 @@ export class BaseService<T> {
    * @param queryParams - query params for filtering and pagination
    * @return paginated documents from db
    */
-  protected async findAll(queryParams: any, populationOpt?: string,select?: string) {
+  protected async findAll(queryParams: any, populationOpt?: any,select?: string) {
     const totalDocuments = await this.model.countDocuments();
     const apiFeatures = new ApiFeatures<T>(this.model.find(), queryParams)
       .filter()

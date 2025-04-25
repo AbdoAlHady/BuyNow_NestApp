@@ -2,6 +2,7 @@ import { IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, MinLen
 
 export class CreateReviewDto {
     
+    @IsOptional()
     @IsNotEmpty({message: 'user id is required'})
     @IsString({message: 'user id must be a string'})
     @IsMongoId({message: 'user id must be a valid mongo id'})
