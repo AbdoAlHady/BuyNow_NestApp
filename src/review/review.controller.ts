@@ -68,12 +68,12 @@ export class ReviewController {
 
   @Delete('user/:id')
   @UseGuards(AuthGuard, AuthRolesGuard)
-  @Roles(['user'])
+  @Roles(['user','admin'])
   @HttpCode(HttpStatus.NO_CONTENT)
   deleteUser(
     @CurrntUser() payload: JwtPayloadType,
     @Param('id', MongoIdValidationPipe) id: string,
   ) {
-    return this.reviewService.deleteReview(id, payload.id);
+    return this.reviewService.deleteReview(id, payload);
   }
 }

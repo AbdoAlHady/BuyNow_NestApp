@@ -10,6 +10,7 @@ import { Review } from './schemas/review.schema';
 import mongoose, { Model } from 'mongoose';
 import { BaseService } from 'src/common/services/base.service';
 import { Product } from 'src/product/schemas/product.schema';
+import { JwtPayloadType } from 'src/utils/types';
 
 @Injectable()
 export class ReviewService extends BaseService<Review> {
@@ -49,9 +50,7 @@ export class ReviewService extends BaseService<Review> {
     return {
       status: 'success',
       results: reviews.length,
-      data: {
-        reviews,
-      },
+      data: reviews,
     };
   }
 
@@ -75,7 +74,7 @@ export class ReviewService extends BaseService<Review> {
   }
 
   /**
-   * Update User review
+   * Logged in user can update their review
    * @param reviewId
    * @param updateReviewDto  - the review data to update
    * @param userId  - the user id of the user updating the review
@@ -89,7 +88,9 @@ export class ReviewService extends BaseService<Review> {
   ) {
     const review = await this.findOne(reviewId);
     if (review.data.user.toString() === userId) {
-      return await this.updateOne(reviewId, updateReviewDto);
+      const updatedReview = await this.updateOne(reviewId, updateReviewDto);
+      await this.updateProductRating(review.data.product.toString());
+      return updatedReview;
     } else {
       throw new ForbiddenException('You are not allowed to update this review');
     }
@@ -101,24 +102,23 @@ export class ReviewService extends BaseService<Review> {
    * @access User
    */
 
-  public async deleteReview(reviewId: string, userId: string) {
+  public async deleteReview(reviewId: string, payload: JwtPayloadType) {
     const review = await this.findOne(reviewId);
-    if (review.data.user.toString() === userId) {
+    if (review.data.user.toString() === payload.id || payload.role === 'admin') {
       await this.deleteOne(reviewId);
+      console.log(review.data.product);
+      await this.updateProductRating(review.data.product.toString());
     } else {
       throw new ForbiddenException('You are not allowed to delete this review');
     }
   }
-  
+
   /**
    *  Check if the user has already reviewed the product
    * @param userId - the user id of the user creating the review
    * @param productId - the product id of the product to check for reviews
    */
-  /**
-   *  Check if the user has already reviewed the product
-   * @param userId - the user id of the user creating the review
-   */
+
   private async checkUserHaveReview(userId: string) {
     const review = await this.reviewModel.findOne({ user: userId });
     if (review) {
@@ -157,8 +157,8 @@ export class ReviewService extends BaseService<Review> {
       });
     } else {
       await this.productModel.findByIdAndUpdate(productId, {
-        ratingsAverage: 0,
-        ratingsQuantity: 0,
+        ratingAverage: 0,
+        ratingQuantity: 0,
       });
     }
   }
