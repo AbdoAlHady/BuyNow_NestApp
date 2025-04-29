@@ -16,6 +16,6 @@ import { ProfileController } from './profile.controller';
   ],
   controllers: [UserController,ProfileController],
   providers: [UserService],
-  exports: [UserService],
+  exports: [UserService,MongooseModule],
 })
 export class UserModule {}
