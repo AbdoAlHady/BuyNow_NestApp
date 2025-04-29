@@ -24,6 +24,7 @@ import { RequestProductModule } from './request-product/request-product.module';
 import { ProductModule } from './product/product.module';
 // import { CommonModule } from './common/common.module';
 import { ReviewModule } from './review/review.module';
+import { CartModule } from './cart/cart.module';
 
 @Module({
   imports: [
@@ -78,6 +79,7 @@ import { ReviewModule } from './review/review.module';
     RequestProductModule,
     ProductModule,
     ReviewModule,
+    CartModule,
   ],
   controllers: [],
   providers: [
