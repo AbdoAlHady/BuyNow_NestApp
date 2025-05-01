@@ -8,6 +8,7 @@ import { UserModule } from 'src/user/user.module';
 @Module({
   controllers: [CouponController],
   providers: [CouponService],
+  exports: [CouponService],
   imports: [
     MongooseModule.forFeature([{
       schema:CouponSchema,
