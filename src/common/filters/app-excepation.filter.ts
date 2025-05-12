@@ -16,7 +16,7 @@ export class AppExcepationFilter<T extends HttpException>
 
     const status = exception.getStatus ? exception.getStatus() : 500;
     const exceptionResponse = exception.getResponse();
-    const error = typeof exceptionResponse === 'string' ? { message: exceptionResponse } : {message: exceptionResponse['message']};
+    const error = typeof exceptionResponse === 'string' ? { message: exceptionResponse } : {message: exceptionResponse['message'][0]};
 
     response.status(status).json({
       status:status.toString().startsWith('4') ? 'fail' : 'error',

@@ -70,6 +70,14 @@ export class CouponService extends BaseService<Coupon> {
     return await this.deleteOne(id);
   }
 
+  public async validateCoupon(couponCode: string) {
+    const coupon = await this.couponModel.findOne({ name: couponCode, expireDate: { $gt: new Date() } });
+    if (!coupon) {
+      throw new BadRequestException('Invalid or expired coupon code');
+    }
+    return coupon;
+  }
+
   /**
    *  Check if a coupon with the given name already exists
    * @param name - The name of the coupon to be checked
